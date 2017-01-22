@@ -13,30 +13,34 @@ import java.lang.reflect.Method;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
 
 import com.alibaba.druid.util.StringUtils;
 import com.hhly.redis.annotation.AnnotationConstants;
 import com.hhly.redis.annotation.ParameterMapKeyProvider;
 import com.hhly.redis.annotation.ParameterValueKeyProvider;
 
-public abstract class CacheAdvice  {
+public abstract class CacheAdvice {
     
-	
-    public static final String ENABLE_CACHE_PROPERTY = "ssm.cache.enable";
+	/** 缓存开关 **/
+	@Value("#{configProperties['cacheEnable']}")
+    private  String cacheEnable ;
     
     /** 缓存开启状态  **/
     public static final String ENABLE_CACHE_PROPERTY_VALUE = "true";
     
+    
     protected abstract Logger getLogger();
     
     /**
-     * @desc 缓存是否开启
+     * @desc 缓存是否关闭 
+     *       false 开启缓存   true 关闭缓存
      * @author scott
      * @date 2017-1-18
      * @return boolean
      */
     protected boolean isEnable() {
-        return ENABLE_CACHE_PROPERTY_VALUE.equals(System.getProperty(ENABLE_CACHE_PROPERTY));
+    	return ENABLE_CACHE_PROPERTY_VALUE.equals(cacheEnable);
     }
     
     /**
@@ -117,11 +121,17 @@ public abstract class CacheAdvice  {
     			}
             }
     	}
+    	getLogger().info("生存的key="+sb.toString());
     	return sb.toString();
     }
     
     
-    
+    /**
+     * @desc  获取mapKey
+     * @param ans
+     * @param args
+     * @return
+     */
     protected String getCacheMapValueKey(Annotation[][] ans,Object [] args){
     	StringBuilder sb = new StringBuilder();
     	if( ans != null && ans.length >0){
@@ -136,7 +146,6 @@ public abstract class CacheAdvice  {
     			}
             }
     	}
-    	
     	return sb.toString();
     }
     

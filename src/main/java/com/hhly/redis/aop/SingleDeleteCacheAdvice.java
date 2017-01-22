@@ -1,3 +1,10 @@
+/**
+ * @Desc    redis 删除数据缓存--切面抽象类
+ * @author  scott
+ * @date    2017-1-16
+ * @company 益彩网络科技公司
+ * @version v1.0
+ */
 package com.hhly.redis.aop;
 
 
@@ -39,23 +46,20 @@ public abstract class SingleDeleteCacheAdvice<T> extends CacheAdvice {
         	String assignedKey =  cacheable.assignedKey();
         	Annotation [][] anns = method.getParameterAnnotations();
         	// 判断缓存类型
-        	if(cacheable.cacheType() == RedisCacheType.Map ){
+        	if(cacheable.cacheType() == RedisCacheType.Map ){ //  缓存数据为 map类型 
         		String mapkey = getCacheKey(namespace, assignedKey, anns,pjp.getArgs());
         		String valuekey = getCacheMapValueKey(anns, pjp.getArgs());
         		cacheService.removeMap(mapkey,valuekey);
     		    return pjp.proceed();
-        	} else {
+        	} else {  // 缓存其它类型数据  
         		String key = getCacheKey(namespace, assignedKey, anns,pjp.getArgs());
-        		if(cacheable.cacheType() == RedisCacheType.String ){
-        			cacheService.remove(key);
-        			return pjp.proceed();
-        		}
+        		cacheService.remove(key);
+        	    return pjp.proceed();
         	}
         }else{  //方法 缓存没开启
         	getLogger().info("Method cache disabled . Name {}", msig.getName());
             return pjp.proceed();
         }
-        return null;
-    }
+      }
     
 }

@@ -24,10 +24,21 @@
 				<value>classpath*:redis.properties</value>
 			</list>
 		</property>
+		<!-- <property name="properties" ref="configProperties"></property> -->
 	</bean>
 	
-	<!-- 引入配置文件 -->
-    <import resource="application-redis.xml"/>
+	<bean id="configProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+          <property name="locations">
+		      <list>
+		         <value>classpath*:redis.properties</value>
+		      </list>
+	      </property>
+	 </bean>
+	
+     <!-- 引入配置文件 -->
+     
+     
+     <import resource="application-redis.xml"/>
     
     
     <aop:config>
@@ -41,9 +52,11 @@
    
    <!-- 切面申明配置-->
    <aop:aspectj-autoproxy>
-    <aop:include name="ReadCacheAspect"  />
-    <aop:include name="DeleteCacheAspect" /> 
-    <aop:include name="UpdateCacheAspect" />
+	    <aop:include name="ReadCacheAspect"  />
+	    <aop:include name="DeleteCacheAspect" /> 
+	    <aop:include name="UpdateCacheAspect" />
    </aop:aspectj-autoproxy>
+   
+  
     
 </beans>

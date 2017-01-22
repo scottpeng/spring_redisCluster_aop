@@ -1,5 +1,5 @@
 /**
- * @Desc 缓存update操作AOP
+ * @Desc 缓存新增,更新操作AOP
  * @author scott
  * @date 2017-1-16
  * @version v1.0
@@ -21,11 +21,11 @@ public class UpdateThroughAssignAOP<T> extends SingleUpdateCacheAdvice<T> {
 	private static final Logger LOG = LoggerFactory.getLogger(UpdateThroughAssignAOP.class);
 
 	@Pointcut("@annotation(com.hhly.redis.annotation.UpdateThroughAssignCache)")
-	public void getSingleAssign() {
+	public void getSingleUpdateAssign() {
 
 	}
 
-	@Around("getSingleAssign()")
+	@Around("getSingleUpdateAssign()")
     public Object cacheSingleAssign(final ProceedingJoinPoint jp) throws Throwable {
         return update(jp);
     }

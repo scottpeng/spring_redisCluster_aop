@@ -31,6 +31,6 @@ public @interface ReadThroughAssignCache {
 	/** 是否启用  默认 开启 */
 	boolean cacheEnable() default true;
 	
-	/** 默认 value 存储类型 */
+	/** 默认 value 存储类型   */
 	Class<?> valueclass() default String.class;
 }

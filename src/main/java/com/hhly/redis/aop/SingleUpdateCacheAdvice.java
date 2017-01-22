@@ -1,3 +1,10 @@
+/**
+ * @Desc    redis 读取数据缓存--切面抽象类
+ * @author  scott
+ * @date    2017-1-16
+ * @company 益彩网络科技公司
+ * @version v1.0
+ */
 package com.hhly.redis.aop;
 
 
@@ -13,11 +20,6 @@ import com.hhly.redis.annotation.RedisCacheType;
 import com.hhly.redis.annotation.UpdateThroughAssignCache;
 import com.hhly.redis.cache.ICacheService;
 
-/**
- * 添加 或者 更新 都走这个类
- * @author 洋白菜
- *
- */
 public abstract class SingleUpdateCacheAdvice<T> extends CacheAdvice {
 
 	@Autowired
@@ -25,14 +27,13 @@ public abstract class SingleUpdateCacheAdvice<T> extends CacheAdvice {
 	
     protected Object update(final ProceedingJoinPoint pjp) throws Throwable {
     	//验证 缓存 是否开启
-        if ( isEnable()) {
+        if (isEnable()) {
             getLogger().info("Cache disabled");
             return pjp.proceed();
         }
         
         Method method = getMethod(pjp);
         UpdateThroughAssignCache cacheable=method.getAnnotation(UpdateThroughAssignCache.class);
-        
         final Signature sig = pjp.getSignature();
         final MethodSignature msig = (MethodSignature) sig;
         
@@ -41,19 +42,33 @@ public abstract class SingleUpdateCacheAdvice<T> extends CacheAdvice {
         	// 获取 KEY规则
         	String namespace =  cacheable.namespace();
         	String assignedKey =  cacheable.assignedKey();
-        	
         	Annotation [][] anns = method.getParameterAnnotations();
-        	if( cacheable.cacheType() == RedisCacheType.Map ){
+        	if(cacheable.cacheType() == RedisCacheType.Map){  // 缓存类型  map 
         		String mapkey = getCacheKey(namespace, assignedKey, anns,pjp.getArgs());
         		String valuekey = getCacheMapValueKey(anns, pjp.getArgs());
-        		
         		Object value = null ;
 				value = pjp.proceed();
 				if(value != null){
 					cacheService.setMap(mapkey,valuekey, value);
 				}
 				return value ;
-        	} else {
+        	}else if(cacheable.cacheType() == RedisCacheType.List){ // 缓存类型 list
+        		String key   = getCacheKey(namespace, assignedKey, anns,pjp.getArgs());
+        		Object value = null ;
+        		value = pjp.proceed();
+        		if(value!=null){
+        			cacheService.lpushx(key, (String)value);
+        		}
+        		return value ;
+        	}else if(cacheable.cacheType() == RedisCacheType.Set){  // 缓存类型 set
+        		String key   = getCacheKey(namespace, assignedKey, anns,pjp.getArgs());
+        		Object value = null ;
+        		value = pjp.proceed();
+        		if(value!=null){
+        			cacheService.sadd(key, value);
+        		}
+        		return value ;
+        	}else {
         		String key = getCacheKey(namespace, assignedKey, anns,pjp.getArgs());
         		Object value = null ;
         		if(cacheable.cacheType() == RedisCacheType.String ){
@@ -65,7 +80,7 @@ public abstract class SingleUpdateCacheAdvice<T> extends CacheAdvice {
         		}
         	}
         }else{  //方法 缓存没开启
-        	getLogger().info("Method cache disabled . Name {}", msig.getName());
+        	getLogger().info("Method cache disabled . Name ", msig.getName());
             return pjp.proceed();
         }
         return null;

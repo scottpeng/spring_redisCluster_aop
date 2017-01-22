@@ -36,6 +36,7 @@ public interface ICacheService<T> {
 		 * @return
 		 * @throws Exception 异常
 		 */
+		@SuppressWarnings("hiding")
 		public <T> T get(String key, Class<T> cls) throws Exception;
 		
 		
@@ -74,6 +75,7 @@ public interface ICacheService<T> {
 		 * @param  key
 		 * @throws Exception 
 		 */
+		@SuppressWarnings("hiding")
 		public <T> Set<T> smembers(String key,Class<T> t ) throws Exception;
 
 		
@@ -95,6 +97,7 @@ public interface ICacheService<T> {
 		 * @param t 返回实体对象类型
 		 * @throws Exception
 		 */
+		@SuppressWarnings("hiding")
 		public <T> T getMapValue(String key, String mapKey, Class<T> t) throws Exception;
 		
 		/**
@@ -103,6 +106,7 @@ public interface ICacheService<T> {
 		 * @param t 返回实体对象类型
 		 * @throws Exception
 		 */
+		@SuppressWarnings("hiding")
 		public <T> List<T> getMapValues(String key, Class<T> t) throws Exception;
 		
 		/**

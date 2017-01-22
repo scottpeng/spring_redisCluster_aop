@@ -22,7 +22,7 @@ public @interface DeleteThroughAssignCache {
 	/** KEY 后缀名 **/
 	String assignedKey() default AnnotationConstants.DEFAULT_STRING;
 	
-	/** 缓存 类型 **/
+	/** 缓存类型 默认缓存类型为 String **/
 	RedisCacheType cacheType() default RedisCacheType.String ;
 	
 	/** 是否启用  默认 开启 **/

@@ -1,5 +1,5 @@
 /**
- * @Desc   缓存Read操作AOP
+ * @Desc   缓存数据读取操作AOP
  * @author scott
  * @date 2017-1-16
  * @version v1.0
@@ -21,20 +21,17 @@ public class ReadThroughAssignAOP<T> extends SingleReadCacheAdvice<T> {
 	private static final Logger LOG = LoggerFactory.getLogger(ReadThroughAssignAOP.class);
 
 	@Pointcut("@annotation(com.hhly.redis.annotation.ReadThroughAssignCache)")
-	public void getSingleAssign() {
+	public void getSingleReadAssign() {
 
 	}
 
-	@Around("getSingleAssign()")
-    public Object cacheSingleAssign(final ProceedingJoinPoint jp) throws Throwable {
-        return cache(jp);
+	@Around("getSingleReadAssign()")
+	public Object cacheSingleAssign(final ProceedingJoinPoint jp) throws Throwable {
+		return cache(jp);
     }
 
 	@Override
 	protected Logger getLogger() {
 		return LOG;
 	}
-
-	
-
 }

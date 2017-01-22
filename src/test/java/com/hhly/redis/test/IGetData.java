@@ -1,22 +1,17 @@
 package com.hhly.redis.test;
 
-import com.hhly.redis.annotation.ParameterValueKeyProvider;
-
 public interface IGetData {
 	
+	public  TestData addData(String uid ,TestData testData);
 	
 	
-	
-	public  TestData addData(TestData testData);
-	
-	
-	public  TestData getData(String uid ,@ParameterValueKeyProvider String aa);
+	public  TestData getData(String uid);
 	
 	
-	public  boolean  deleteData(int uid);
+	public  boolean  deleteData(String uid);
 	
 	
-	public TestData  updateData(int uid ,TestData testData);
+	public TestData  updateData(String uid ,TestData testData);
 	
 
 }
